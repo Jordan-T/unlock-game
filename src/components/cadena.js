@@ -5,6 +5,9 @@ import { Timer } from "./timer";
 import "./cadena.scss";
 
 export class Cadenas {
+  btns = [];
+  results = [];
+
   constructor(element) {
     this.element = element;
     this.indexNextValueToFind = "";
@@ -23,7 +26,7 @@ export class Cadenas {
 
   events() {
     $(document).on("click", ".c-cadena__btn", e => {
-      let index = $(e.currentTarget).data("index");
+      const index = $(e.currentTarget).index();
 
       if (
         this.indexNextValueToFind !== "" &&
@@ -60,10 +63,8 @@ export class Cadenas {
   }
 
   false() {
-    $(".c-cadena__btn")
-      .removeAttr("disabled")
-      .removeClass("c-cadena__btn--active");
-    $(".c-cadena__result").removeClass("c-cadena__result--active");
+    this.btns.forEach(btn => btn.unsetActive());
+    this.results.forEach(result => result.unsetActive());
     this.indexNextValueToFind = "";
     this.correctAnswer = 0;
 
@@ -71,13 +72,8 @@ export class Cadenas {
   }
 
   valid(e, index) {
-    $(e.currentTarget)
-      .attr("disabled", "disabled")
-      .addClass("c-cadena__btn--active");
-
-    $(".c-cadena__result")
-      .eq(this.code[index])
-      .addClass("c-cadena__result--active");
+    this.btns[index].setActive();
+    this.results[this.code[index]].setActive();
 
     let nextValueToFind = this.code[index] + 1;
     if (nextValueToFind === this.code.length) {
@@ -89,19 +85,68 @@ export class Cadenas {
     if (this.indexNextValueToFind === -1) {
       this.indexNextValueToFind = 0;
     }
-    this.correctAnswer++;
+    this.correctAnswer += 1;
 
     //@ TODO sam : add sound effect turn on the light
   }
 
   createDom() {
-    this.code.forEach((value, index) => {
-      $("#result").append(
-        '<div class="c-cadena__result result-' + index + '"></div>'
-      );
-      $("#cadenas-btn").append(
-        '<button class="btn c-cadena__btn" data-index="' + index + '"></button>'
-      );
-    });
+    if (Array.isArray(this.results)) {
+      this.results.forEach(result => result.destroy());
+    }
+    const resultElement = document.getElementById("result");
+    this.results = this.code.map(() => new Result(resultElement));
+
+    if (Array.isArray(this.btns)) {
+      this.btns.forEach(btn => btn.destroy());
+    }
+    const btnElement = document.getElementById("cadenas-btn");
+    this.btns = this.code.map((_, i) => new Btn(btnElement));
+  }
+}
+
+class Btn {
+  ACTIVE_CLASS = "c-cadena__btn--active";
+
+  constructor(wrapper) {
+    this.element = document.createElement("button");
+    this.element.classList.add("c-cadena__btn");
+    wrapper.append(this.element);
+  }
+
+  setActive() {
+    this.element.classList.add(this.ACTIVE_CLASS);
+    this.element.disabled = true;
+  }
+
+  unsetActive() {
+    this.element.classList.remove(this.ACTIVE_CLASS);
+    this.element.disabled = false;
+  }
+
+  destroy() {
+    this.element.remove();
+  }
+}
+
+class Result {
+  ACTIVE_CLASS = "c-cadena__result--active";
+
+  constructor(wrapper) {
+    this.element = document.createElement("div");
+    this.element.classList.add("c-cadena__result");
+    wrapper.append(this.element);
+  }
+
+  setActive() {
+    this.element.classList.add(this.ACTIVE_CLASS);
+  }
+
+  unsetActive() {
+    this.element.classList.remove(this.ACTIVE_CLASS);
+  }
+
+  destroy() {
+    this.element.remove();
   }
 }
