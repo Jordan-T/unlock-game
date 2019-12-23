@@ -12,7 +12,7 @@ export class Btn extends BaseActiveElement {
 
     this.onClick = e => {
       e.preventDefault();
-      onClick();
+      onClick(this.active);
     };
     this.element.addEventListener("click", this.onClick, true);
   }
