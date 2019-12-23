@@ -1,10 +1,9 @@
-import $ from "jquery";
 import shuffle from "lodash.shuffle";
-import { Timer } from "./timer";
+import { Timer } from "../timer";
+import { Btn } from "./btn";
+import { Result } from "./result";
 
-import "./cadena.scss";
-
-export class Cadenas {
+export class Game {
   btns = [];
   results = [];
 
@@ -24,24 +23,7 @@ export class Cadenas {
     });
   }
 
-  events() {
-    $(document).on("click", ".c-cadena__btn", e => {
-      const index = $(e.currentTarget).index();
-
-      if (
-        this.indexNextValueToFind !== "" &&
-        this.indexNextValueToFind !== index
-      ) {
-        this.false();
-      } else {
-        this.valid(e, index);
-      }
-
-      if (this.correctAnswer === this.code.length) {
-        this.win();
-      }
-    });
-  }
+  events() {}
 
   win() {
     this.timer.stop();
@@ -71,7 +53,22 @@ export class Cadenas {
     //@TODO sam : add sound effect turn off the light
   }
 
-  valid(e, index) {
+  onClick(index) {
+    if (
+      this.indexNextValueToFind !== "" &&
+      this.indexNextValueToFind !== index
+    ) {
+      this.false();
+    } else {
+      this.valid(index);
+    }
+
+    if (this.correctAnswer === this.code.length) {
+      this.win();
+    }
+  }
+
+  valid(index) {
     this.btns[index].setActive();
     this.results[this.code[index]].setActive();
 
@@ -101,52 +98,11 @@ export class Cadenas {
       this.btns.forEach(btn => btn.destroy());
     }
     const btnElement = document.getElementById("cadenas-btn");
-    this.btns = this.code.map((_, i) => new Btn(btnElement));
-  }
-}
-
-class Btn {
-  ACTIVE_CLASS = "c-cadena__btn--active";
-
-  constructor(wrapper) {
-    this.element = document.createElement("button");
-    this.element.classList.add("c-cadena__btn");
-    wrapper.append(this.element);
-  }
-
-  setActive() {
-    this.element.classList.add(this.ACTIVE_CLASS);
-    this.element.disabled = true;
-  }
-
-  unsetActive() {
-    this.element.classList.remove(this.ACTIVE_CLASS);
-    this.element.disabled = false;
-  }
-
-  destroy() {
-    this.element.remove();
-  }
-}
-
-class Result {
-  ACTIVE_CLASS = "c-cadena__result--active";
-
-  constructor(wrapper) {
-    this.element = document.createElement("div");
-    this.element.classList.add("c-cadena__result");
-    wrapper.append(this.element);
-  }
-
-  setActive() {
-    this.element.classList.add(this.ACTIVE_CLASS);
-  }
-
-  unsetActive() {
-    this.element.classList.remove(this.ACTIVE_CLASS);
-  }
-
-  destroy() {
-    this.element.remove();
+    this.btns = this.code.map(
+      (_, i) =>
+        new Btn(btnElement, i, () => {
+          this.onClick(i);
+        })
+    );
   }
 }
