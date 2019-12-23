@@ -7,40 +7,54 @@ export class Game {
   btns = [];
   results = [];
   timer = null;
+  #code = [];
 
-  constructor(element) {
+  constructor(element, { difficulty = "medium", onEnd } = {}) {
     this.element = element;
-    this.codeLength = 8;
-    this.indexNextValueToFind = "";
+    this.difficulty = difficulty;
+    this.onEnd = onEnd;
+
+    let duration = 120;
+    if (difficulty === "very-easy") {
+      duration = 300;
+      this.codeValues = [..."1234"];
+    } else if (difficulty === "easy") {
+      duration = 180;
+      this.codeValues = [..."123456"];
+    } else if (difficulty === "hard") {
+      duration = 60;
+      this.codeValues = [..."ABCDEFGHIJ"];
+    } else if (difficulty === "very-hard") {
+      duration = 40;
+      this.codeValues = [..."ABCDEFGHIJKL"];
+    } else {
+      this.codeValues = [..."12345678"];
+    }
+    this.nextValueToFind = "";
     this.correctAnswer = 0;
     this.setCode();
-    this.createDom();
+    this.createDom({ duration });
     //@TODO sam : add sound ambiance
   }
 
   win() {
     this.timer.stop();
-    alert("win");
-
-    //@TODO sam : animation
+    this.onEnd({ win: true });
   }
 
   end() {
     this.timer.stop();
-    console.log("loose");
+    this.onEnd({ win: false });
   }
 
   setCode() {
-    const a = [];
-    for (let i = 0; i < this.codeLength; i += 1) a.push(i);
-    this.code = shuffle(a);
-    console.log("code : ", this.code);
+    this.#code = shuffle(this.codeValues);
   }
 
   false() {
     this.btns.forEach(btn => btn.unsetActive());
     this.results.forEach(result => result.unsetActive());
-    this.indexNextValueToFind = "";
+    this.nextValueToFind = "";
     this.correctAnswer = 0;
 
     //@TODO sam : add sound effect turn off the light
@@ -48,39 +62,37 @@ export class Game {
 
   onClick(index) {
     if (
-      this.indexNextValueToFind !== "" &&
-      this.indexNextValueToFind !== index
+      this.nextValueToFind !== "" &&
+      this.nextValueToFind !== this.codeValues[index]
     ) {
       this.false();
-    } else {
-      this.valid(index);
+      return;
     }
 
-    if (this.correctAnswer === this.code.length) {
+    this.valid(index);
+
+    if (this.correctAnswer === this.#code.length) {
       this.win();
     }
   }
 
   valid(index) {
+    const resultIndex = this.#code.indexOf(this.codeValues[index]);
     this.btns[index].setActive();
-    this.results[this.code[index]].setActive();
+    this.results[resultIndex].setActive();
 
-    let nextValueToFind = this.code[index] + 1;
-    if (nextValueToFind === this.code.length) {
-      nextValueToFind = 0;
+    let nextIndex = resultIndex + 1;
+    if (nextIndex === this.#code.length) {
+      nextIndex = 0;
     }
 
-    this.indexNextValueToFind = this.code.indexOf(nextValueToFind);
-
-    if (this.indexNextValueToFind === -1) {
-      this.indexNextValueToFind = 0;
-    }
+    this.nextValueToFind = this.#code[nextIndex];
     this.correctAnswer += 1;
 
     //@ TODO sam : add sound effect turn on the light
   }
 
-  createDom() {
+  createDom({ duration }) {
     this.element.innerHTML = `
       <div class="c-cadena__top">
         <div class="c-cadena__timer"></div>
@@ -95,7 +107,7 @@ export class Game {
       this.timer.destroy();
     }
     this.timer = new Timer(this.element.querySelector(".c-cadena__timer"), {
-      duration: 120,
+      duration,
       onEnd: () => this.end()
     });
 
@@ -103,20 +115,28 @@ export class Game {
       this.results.forEach(result => result.destroy());
     }
     const resultElement = this.element.querySelector(".c-cadena__results");
-    this.results = this.code.map(() => new Result(resultElement));
+    this.results = this.#code.map(() => new Result(resultElement));
 
     if (Array.isArray(this.btns)) {
       this.btns.forEach(btn => btn.destroy());
     }
     const btnElement = this.element.querySelector(".c-cadena__btns");
-    this.btns = this.code.map(
-      (_, i) =>
-        new Btn(btnElement, i, active => {
+    this.btns = this.codeValues.map(
+      (value, index) =>
+        new Btn(btnElement, value, active => {
           if (active === true) {
             return;
           }
-          this.onClick(i);
+          this.onClick(index);
         })
     );
+  }
+
+  destroy() {
+    this.timer.destroy();
+    this.results.forEach(result => result.destroy());
+    this.btns.forEach(btn => btn.destroy());
+
+    this.element.innerHTML = "";
   }
 }

@@ -17,6 +17,7 @@ $lightColor--active2: #4C4;
     width: fit-content;
     margin-top: 3rem;
     margin: 2rem auto;
+    padding: 1rem 2rem;
     background: #222;
     border-radius: 1rem;
     box-shadow:
@@ -33,9 +34,6 @@ $lightColor--active2: #4C4;
     transform: translate(-50%, -50%);
     font-size: 1.75rem;
     font-family: monospace, sans-serif;
-    color: #999;
-    text-shadow: 0 .1rem .05rem rgba(0, 0, 0, .7);
-    letter-spacing: .1em;
   }
 
   &__results {
@@ -66,6 +64,27 @@ $lightColor--active2: #4C4;
       inset 0 -.2rem .2rem rgba(0, 0, 0, .2),
       0 1rem 1rem rgba(0, 0, 0, .5);
     }
+
+    &--reverse {
+      .c-cadena__result {
+        &::after {
+          transform: rotate(calc(var(--rotation) * -1 - 90deg));
+        }
+        
+        span {
+          border-top-width: .45rem;
+          border-bottom-width: 0;
+          margin: -.4rem 0;
+          transform: rotate(calc(var(--rotation-step) / -2));
+
+          &::before {
+            top: auto;
+            bottom: 100%;
+            margin: 0 -.4rem .6rem;
+          }
+        }
+      }
+    }
   }
 
   &__result {
@@ -88,7 +107,8 @@ $lightColor--active2: #4C4;
       margin: -.1rem 0;
       border: solid .45rem transparent;
       border-bottom-color: #880;
-      border-top: 0;
+      border-top-color: #880;
+      border-top-width: 0;
       transform-origin: -4.2rem 50%;
       transform: rotate(calc(var(--rotation-step) / 2));
 
@@ -98,7 +118,7 @@ $lightColor--active2: #4C4;
         top: 100%;
         left: 0;
         width: .85rem;
-        height: .2rem;
+        height: .15rem;
         margin: .6rem -.4rem 0;
         background: #880;
       }
@@ -114,7 +134,7 @@ $lightColor--active2: #4C4;
       margin: 0 .75rem;
       box-shadow: 
       inset 0 -.2rem .75rem rgba(255, 255, 255, .3),
-      inset 0 .2rem .1rem rgba(0, 0, 0, .1),
+      inset 0 .2rem .2rem rgba(0, 0, 0, .5),
       0 0 0 $lightColor--active,
       0 0 0 $lightColor--active,
       0 0 0 $lightColor--active,
@@ -138,7 +158,7 @@ $lightColor--active2: #4C4;
     }
 
     // create the rotation (min 5 element, max 20)
-    @each $length in 6, 8, 10 {
+    @each $length in 4, 6, 8, 10, 12 {
       @for $i from 1 through $length {
         &:nth-child(#{$i}):nth-last-child(#{$length - $i + 1}) {
           --rotation-step: #{360 / $length}deg;
@@ -157,38 +177,68 @@ $lightColor--active2: #4C4;
   
   &__btn {
     position: relative;
-    border: 3px solid #fff;
-    border-radius: 100%;
-    cursor: pointer;
     display: inline-block;
-    height: 2.5rem;
-    width: 2.5rem;
-    margin: 1rem;
-    background: #333;
-    box-shadow: 0 -2px 0 3px #222 inset, 0 5px 5px rgba(3, 25, 41, 0.17), 0 15px rgba(255, 255, 255, 0.25) inset;
     outline: none;
+    cursor: pointer;
+    margin: .5rem;
+    width: 2rem;
+    height: 2rem;
+    background: #111;
+    border: 0;
+    box-shadow:
+    inset 0 -.2rem rgba(255, 255, 255, .1),
+    inset 0 .2rem rgba(0, 0, 0, .2);
 
-    /* need styles
     &::before {
       content: attr(data-value);
       position: absolute;
       top: 50%; left: 100%;
+      margin: 0 0rem;
       padding: 1rem;
       transform: translateY(-50%);
-      color: red;
+      color: #822;
+      font-size: 1rem;
+      font-weight: 700;
       pointer-events: none;
     }
-    //*/
-    
-    &:hover {
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 1rem;
+      height: 1rem;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
       background: #333;
-      box-shadow: 0 -2px 0 3px #000 inset, 0 5px 5px rgba(0, 0, 0, 0.17), 0 15px rgba(255, 255, 255, 0.32) inset;
+      box-shadow:
+      inset 0 .2rem .3rem rgba(255, 255, 255, .2),
+      inset 0 -.2rem .3rem rgba(0, 0, 0, .5);
+      transition: .1s ease-out;
+    }
+
+    &:nth-child(2n + 1)::before {
+      left: auto;
+      right: 100%;
+    }
+    
+    &:hover,
+    &:focus {
+      &::after {
+        background: #777;
+      }
     }
     
     &--active {
-      background: #333;
-      opacity: 0.3;
-      box-shadow: 0 -2px 0 3px #1a1a1a inset, 0 5px 5px rgba(0, 0, 0, 0.17), 0 15px rgba(255, 255, 255, 0.32) inset;
+      &,
+      &:hover,
+      &:focus {
+        &::after {
+          background: #333;
+          opacity: .4;
+        }
+      }
     }
   }
 

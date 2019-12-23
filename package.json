@@ -1,5 +1,5 @@
 {
-  "name": "mini-games",
+  "name": "unlock-game",
   "version": "1.0.0",
   "description": "",
   "main": "index.html",
@@ -10,7 +10,6 @@
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "7.7.4",
     "@babel/plugin-proposal-private-methods": "7.7.4",
-    "jquery": "3.4.1",
     "lodash.shuffle": "4.2.0"
   },
   "devDependencies": {
