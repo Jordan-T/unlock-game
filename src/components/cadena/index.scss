@@ -7,15 +7,83 @@ $lightColor--active: #CFC;
 $lightColor--active2: #4C4;
 
 .c-cadena {
+  &__game {
+    @media (max-height: 35rem) {
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+  }
+
+  &__actions {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  &__action {
+    display: inline-block;
+    cursor: pointer;
+    margin: 0 0 1rem;
+    padding: .5rem 1rem;
+    font-family: inherit;
+    border-radius: 5rem;
+    background: #444;
+    color: #FFF;
+    border: 0;
+    letter-spacing: inherit;
+    box-shadow:
+      inset 0 .2rem .2rem rgba(255, 255, 255, .1),
+      inset 0 -.2rem .2rem rgba(0, 0, 0, .2),
+      0 .5rem .5rem rgba(0, 0, 0, .3);
+    transition: .1s ease-out;
+    outline: none;
+
+    &:hover,
+    &:focus {
+      background: #333;
+    }
+
+    &--active {
+      background: #162d16;
+
+      &:hover,
+      &:focus {
+        background: #193f19;
+      }
+    }
+
+    &--mute {
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 1.8em;
+        height: 1.8em;
+        vertical-align: middle;
+        margin: -.9em .5em -.9em 0;
+        background: url(../../img/volume_up.svg);
+        background-size: contain;
+      }
+    }
+    &--mute#{&}--active {
+      &::before {
+        background-image: url(../../img/volume_off.svg);
+      }
+    }
+  }
+
+
   &__top {
     position: relative;
     text-align: center;
     margin: 0 auto;
   }
-  
+
   &__bottom {
     width: fit-content;
-    margin-top: 3rem;
     margin: 2rem auto;
     padding: 1rem 2rem;
     background: #222;
@@ -70,7 +138,7 @@ $lightColor--active2: #4C4;
         &::after {
           transform: rotate(calc(var(--rotation) * -1 - 90deg));
         }
-        
+
         span {
           border-top-width: .45rem;
           border-bottom-width: 0;
@@ -132,7 +200,7 @@ $lightColor--active2: #4C4;
       background: $lightColor--base;
       border-radius: 50%;
       margin: 0 .75rem;
-      box-shadow: 
+      box-shadow:
       inset 0 -.2rem .75rem rgba(255, 255, 255, .3),
       inset 0 .2rem .2rem rgba(0, 0, 0, .5),
       0 0 0 $lightColor--active,
@@ -147,7 +215,7 @@ $lightColor--active2: #4C4;
       transform: rotate(calc(var(--rotation) - 90deg));
       transition: all 300ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
     }
-    
+
     &--active {
       &::after {
         background: $lightColor--active;
@@ -174,7 +242,7 @@ $lightColor--active2: #4C4;
     text-align: center;
     padding: 0;
   }
-  
+
   &__btn {
     position: relative;
     display: inline-block;
@@ -223,14 +291,14 @@ $lightColor--active2: #4C4;
       left: auto;
       right: 100%;
     }
-    
+
     &:hover,
     &:focus {
       &::after {
         background: #777;
       }
     }
-    
+
     &--active {
       &,
       &:hover,
@@ -241,12 +309,6 @@ $lightColor--active2: #4C4;
         }
       }
     }
-  }
-
-  @media (max-height: 35rem) {
-    display: flex;
-    align-items: center;
-    justify-content: center
   }
 }
 

@@ -2,6 +2,9 @@ import shuffle from "lodash.shuffle";
 import { Timer } from "./timer";
 import { Btn } from "./btn";
 import { Result } from "./result";
+import { Sound } from "../sound";
+import beepSound from "../../sounds/beep.mp3";
+import errorSound from "../../sounds/error.mp3";
 
 export class Game {
   btns = [];
@@ -9,10 +12,11 @@ export class Game {
   timer = null;
   #code = [];
 
-  constructor(element, { difficulty = "medium", onEnd } = {}) {
+  constructor(element, { difficulty = "medium", onEnd } = {}, globalSettings = {}) {
     this.element = element;
     this.difficulty = difficulty;
     this.onEnd = onEnd;
+    this.globalSettings = globalSettings;
 
     let duration = 120;
     if (difficulty === "very-easy") {
@@ -34,7 +38,6 @@ export class Game {
     this.correctAnswer = 0;
     this.setCode();
     this.createDom({ duration });
-    //@TODO sam : add sound ambiance
   }
 
   win() {
@@ -57,7 +60,9 @@ export class Game {
     this.nextValueToFind = "";
     this.correctAnswer = 0;
 
-    //@TODO sam : add sound effect turn off the light
+    if (this.globalSettings.muted !== true) {
+      new Sound(errorSound);
+    }
   }
 
   onClick(index) {
@@ -89,7 +94,9 @@ export class Game {
     this.nextValueToFind = this.#code[nextIndex];
     this.correctAnswer += 1;
 
-    //@ TODO sam : add sound effect turn on the light
+    if (this.globalSettings.muted !== true) {
+      new Sound(beepSound);
+    }
   }
 
   createDom({ duration }) {
