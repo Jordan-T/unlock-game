@@ -148,6 +148,22 @@ $lightColor--active2: #4C4;
         }
       }
     }
+
+    &.c-cadena__results--loose {
+      .c-cadena__result {
+        &:after {
+          animation: unlock-loose 1.5s infinite;
+        }
+      }
+    }
+
+    &.c-cadena__results--win {
+      .c-cadena__result {
+        &:after {
+          animation: light 1.5s ease-in-out infinite alternate, unlock-win 1s infinite;
+        }
+      }
+    }
   }
 
   &__result {
@@ -351,4 +367,14 @@ $lightColor--active2: #4C4;
     0 0 75px $lightColor--active2,
     0 .2rem .4rem rgba(0, 0, 0, .5);
   }
+}
+
+@keyframes unlock-win {
+
+}
+
+
+@keyframes unlock-loose {
+  0% { }
+  50% { background-color: red; }
 }
