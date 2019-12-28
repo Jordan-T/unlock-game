@@ -130,20 +130,15 @@ $lightColor--active2: #4C4;
       box-shadow:
       inset 0 .2rem .2rem rgba(255, 255, 255, .1),
       inset 0 -.2rem .2rem rgba(0, 0, 0, .2),
-      0 1rem 1rem rgba(0, 0, 0, .5);
+      0 .2rem .4rem rgba(0, 0, 0, .5);
     }
 
     &--reverse {
       .c-cadena__result {
-        &::after {
-          transform: rotate(calc(var(--rotation) * -1 - 90deg));
-        }
-
         span {
           border-top-width: .45rem;
           border-bottom-width: 0;
           margin: -.4rem 0;
-          transform: rotate(calc(var(--rotation-step) / -2));
 
           &::before {
             top: auto;
@@ -156,14 +151,11 @@ $lightColor--active2: #4C4;
   }
 
   &__result {
-    --rotation: 90deg;
-    --rotation-step: 45deg;
     position: absolute;
     top: 50%; left: 50%;
     width: 50%;
     text-align: right;
     transform-origin: 0 50%;
-    transform: translateY(-50%) rotate(calc(var(--rotation) * -1 - 90deg));
 
     // arrow
     span {
@@ -178,7 +170,6 @@ $lightColor--active2: #4C4;
       border-top-color: #880;
       border-top-width: 0;
       transform-origin: -4.2rem 50%;
-      transform: rotate(calc(var(--rotation-step) / 2));
 
       &::before {
         content: '';
@@ -201,8 +192,8 @@ $lightColor--active2: #4C4;
       border-radius: 50%;
       margin: 0 .75rem;
       box-shadow:
-      inset 0 -.2rem .75rem rgba(255, 255, 255, .3),
-      inset 0 .2rem .2rem rgba(0, 0, 0, .5),
+      inset 0 .2rem .75rem rgba(255, 255, 255, .3),
+      inset 0 -.2rem .2rem rgba(0, 0, 0, .5),
       0 0 0 $lightColor--active,
       0 0 0 $lightColor--active,
       0 0 0 $lightColor--active,
@@ -211,8 +202,7 @@ $lightColor--active2: #4C4;
       0 0 0 $lightColor--active2,
       0 0 0 $lightColor--active2,
       0 0 0 $lightColor--active2,
-      0 1rem 1rem rgba(0, 0, 0, .5);
-      transform: rotate(calc(var(--rotation) - 90deg));
+      0 .2rem .4rem rgba(0, 0, 0, .5);
       transition: all 300ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
     }
 
@@ -227,10 +217,28 @@ $lightColor--active2: #4C4;
 
     // create the rotation (min 5 element, max 20)
     @each $length in 4, 6, 8, 10, 12 {
+      $baseRotationStep: 360deg / $length;
+
       @for $i from 1 through $length {
+        $rotationStep: 360deg / $length * ($i - 1);
+
         &:nth-child(#{$i}):nth-last-child(#{$length - $i + 1}) {
-          --rotation-step: #{360 / $length}deg;
-          --rotation: #{360 / $length * ($i - 1)}deg;
+          transform: translateY(-50%) rotate((($rotationStep * -1) - 90deg));
+
+          &::after {
+            transform: rotate(($rotationStep + 90deg));
+          }
+
+          span {
+            transform: rotate(($baseRotationStep / 2));
+
+          }
+
+          .c-cadena__results--reverse & {
+            span {
+              transform: rotate(($baseRotationStep / -2));
+            }
+          }
         }
       }
     }
@@ -317,8 +325,8 @@ $lightColor--active2: #4C4;
 @keyframes light {
   from {
     box-shadow:
-    inset 0 -.2rem .75rem rgba(255, 255, 255, .3),
-    inset 0 .2rem .1rem rgba(0, 0, 0, .1),
+    inset 0 .2rem .75rem rgba(255, 255, 255, .3),
+    inset 0 -.2rem .1rem rgba(0, 0, 0, .1),
     0 0 10px $lightColor--active,
     0 0 20px $lightColor--active,
     0 0 30px $lightColor--active,
@@ -327,12 +335,12 @@ $lightColor--active2: #4C4;
     0 0 80px $lightColor--active2,
     0 0 100px $lightColor--active2,
     0 0 150px $lightColor--active2,
-    0 1rem 1rem rgba(0, 0, 0, .5);
+    0 .2rem .4rem rgba(0, 0, 0, .5);
   }
   to {
     box-shadow:
-    inset 0 -.2rem .75rem rgba(255, 255, 255, .3),
-    inset 0 .2rem .1rem rgba(0, 0, 0, .1),
+    inset 0 .2rem .75rem rgba(255, 255, 255, .3),
+    inset 0 -.2rem .1rem rgba(0, 0, 0, .1),
     0 0 5px $lightColor--active,
     0 0 10px $lightColor--active,
     0 0 15px $lightColor--active,
@@ -341,6 +349,6 @@ $lightColor--active2: #4C4;
     0 0 40px $lightColor--active2,
     0 0 50px $lightColor--active2,
     0 0 75px $lightColor--active2,
-    0 1rem 1rem rgba(0, 0, 0, .5);
+    0 .2rem .4rem rgba(0, 0, 0, .5);
   }
 }
