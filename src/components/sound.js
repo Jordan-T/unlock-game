@@ -20,14 +20,28 @@ export class Sound {
   onEnd = () => {
     if (this.repeat === true) {
       this.sound.currentTime = 0;
-      this.sound.play();
+      this.play();
       return;
     }
     this.destroy();
   };
 
+  /**
+   * Play the sound
+   * If the sound cannot be played, it will still be played when the user clicks on the page.
+   * In particular, on the first arrival on the page
+   */
   play() {
-    this.sound.play();
+    const result = this.sound.play();
+    if (result !== undefined) {
+      result.catch((error) => {
+        const onClick = () => {
+          this.play();
+          document.body.removeEventListener("click", onClick, true);
+        };
+        document.body.addEventListener("click", onClick, true);
+      });
+    }
   }
 
   pause() {
