@@ -54,15 +54,7 @@ export class Cadena {
   };
 
   showEnd = ({ win }) => {
-    //this.game.destroy();
-
-    const resultElement = this.element.querySelector(".c-cadena__results");
-    if (win) {
-      resultElement.classList.add("c-cadena__results--win");
-    } else {
-      resultElement.classList.add("c-cadena__results--loose");
-    }
-
+    this.game.destroy();
     this.end = new End(this.gameElement, { win, onRetry: this.createIntro }, this.settings);
   };
 
