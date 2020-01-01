@@ -44,6 +44,7 @@ export class Cadena {
   createIntro = () => {
     if (this.end !== undefined) {
       this.end.destroy();
+      this.end = undefined;
     }
     this.intro = new Intro(this.gameElement, this.createGame, this.settings);
   };
@@ -61,12 +62,15 @@ export class Cadena {
   destroy() {
     if (this.intro !== undefined) {
       this.intro.destroy();
+      this.intro = undefined;
     }
     if (this.game !== undefined) {
       this.game.destroy();
+      this.game = undefined;
     }
     if (this.end !== undefined) {
       this.end.destroy();
+      this.end = undefined;
     }
     this.muteAction.destroy();
     this.element.classList.remove("c-cadena");

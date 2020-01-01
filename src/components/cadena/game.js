@@ -5,14 +5,23 @@ import { Result } from "./result";
 import { Sound } from "../sound";
 import beepSound from "../../sounds/beep.mp3";
 import errorSound from "../../sounds/error.mp3";
+import winSound from "../../sounds/victory.mp3";
 
 export class Game {
   btns = [];
   results = [];
   timer = null;
   #code = [];
+  static WIN_CLASS = "c-cadena__game--win";
+  static WIN_DELAY = 4000; // 4s before score in
+  static LOOSE_CLASS = "c-cadena__game--loose";
+  static LOOSE_DELAY = 1200; // 1.2s before score in
 
-  constructor(element, { difficulty = "medium", onEnd } = {}, globalSettings = {}) {
+  constructor(
+    element,
+    { difficulty = "medium", onEnd } = {},
+    globalSettings = {}
+  ) {
     this.element = element;
     this.difficulty = difficulty;
     this.onEnd = onEnd;
@@ -42,12 +51,24 @@ export class Game {
 
   win() {
     this.timer.stop();
-    this.onEnd({ win: true });
+    this.element.classList.add(this.constructor.WIN_CLASS);
+    if (this.globalSettings.muted !== true) {
+      new Sound(winSound);
+    }
+    setTimeout(() => {
+      this.onEnd({ win: true });
+    }, this.constructor.WIN_DELAY);
   }
 
   end() {
     this.timer.stop();
-    this.onEnd({ win: false });
+    this.element.classList.add(this.constructor.LOOSE_CLASS);
+    if (this.globalSettings.muted !== true) {
+      new Sound(errorSound, {repeat: 3});
+    }
+    setTimeout(() => {
+      this.onEnd({ win: false });
+    }, this.constructor.LOOSE_DELAY);
   }
 
   setCode() {
@@ -143,6 +164,9 @@ export class Game {
     this.timer.destroy();
     this.results.forEach(result => result.destroy());
     this.btns.forEach(btn => btn.destroy());
+
+    this.element.classList.remove(this.constructor.WIN_CLASS);
+    this.element.classList.remove(this.constructor.LOOSE_CLASS);
 
     this.element.innerHTML = "";
   }
