@@ -44,6 +44,7 @@ export class Cadena {
   createIntro = () => {
     if (this.end !== undefined) {
       this.end.destroy();
+      this.end = undefined;
     }
     this.intro = new Intro(this.gameElement, this.createGame, this.settings);
   };
@@ -54,27 +55,22 @@ export class Cadena {
   };
 
   showEnd = ({ win }) => {
-    //this.game.destroy();
-
-    const resultElement = this.element.querySelector(".c-cadena__results");
-    if (win) {
-      resultElement.classList.add("c-cadena__results--win");
-    } else {
-      resultElement.classList.add("c-cadena__results--loose");
-    }
-
+    this.game.destroy();
     this.end = new End(this.gameElement, { win, onRetry: this.createIntro }, this.settings);
   };
 
   destroy() {
     if (this.intro !== undefined) {
       this.intro.destroy();
+      this.intro = undefined;
     }
     if (this.game !== undefined) {
       this.game.destroy();
+      this.game = undefined;
     }
     if (this.end !== undefined) {
       this.end.destroy();
+      this.end = undefined;
     }
     this.muteAction.destroy();
     this.element.classList.remove("c-cadena");

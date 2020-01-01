@@ -1,18 +1,8 @@
-import { Sound } from "../sound";
-import winSound from "../../sounds/victory.mp3";
-
 export class End {
-  constructor(wrapper, { win, onRetry }, globalSettings = {}) {
-    this.globalSettings = globalSettings;
-
+  constructor(wrapper, { win, onRetry }) {
     this.element = document.createElement("div");
     this.element.classList.add("c-end");
     this.element.innerHTML = `<h1>You ${win ? "win" : "loose"}</h1>`;
-
-    if (globalSettings.muted !== true && win === true) {
-      new Sound(winSound);
-    }
-
     this.onClick = e => {
       e.preventDefault();
       onRetry();
