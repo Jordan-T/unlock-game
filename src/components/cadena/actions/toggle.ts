@@ -1,9 +1,26 @@
 export class Toggle {
-  active = false;
-  CLASS = "c-cadena__action";
-  ACTIVE_CLASS = "c-cadena__action--active";
+  private element: HTMLButtonElement;
+  private onActive: () => void;
+  private onUnactive: () => void;
 
-  constructor(wrapper, { onActive, onUnactive, html, className }) {
+  private active = false;
+  private readonly CLASS = "c-cadena__action";
+  private readonly ACTIVE_CLASS = "c-cadena__action--active";
+
+  constructor(
+    wrapper: HTMLElement,
+    {
+      onActive,
+      onUnactive,
+      html,
+      className
+    }: {
+      onActive: () => void;
+      onUnactive: () => void;
+      html: string;
+      className: string;
+    }
+  ) {
     this.element = document.createElement("button");
     this.element.className = className;
     this.element.innerHTML = html;
@@ -17,7 +34,7 @@ export class Toggle {
     wrapper.append(this.element);
   }
 
-  onClick = e => {
+  onClick = (e: Event) => {
     e.preventDefault();
     const needActive = this.active === false;
     if (needActive === true) {

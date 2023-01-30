@@ -7,11 +7,20 @@ import ambianceSound from "../../sounds/ambiance.mp3";
 import "./index.scss";
 
 export class Cadena {
-  settings = {
+  private element: HTMLElement;
+  private gameElement: HTMLElement;
+  private actionsElement: HTMLElement;
+  private muteAction: Toggle;
+  private game?: Game;
+  private end?: End;
+  private intro?: Intro;
+  private ambiance: Sound;
+
+  private settings = {
     muted: false
   };
 
-  constructor(element) {
+  constructor(element: HTMLElement) {
     this.element = element;
     this.element.classList.add("c-cadena");
     this.gameElement = document.createElement("div");
@@ -46,17 +55,21 @@ export class Cadena {
       this.end.destroy();
       this.end = undefined;
     }
-    this.intro = new Intro(this.gameElement, this.createGame, this.settings);
+    this.intro = new Intro(this.gameElement, this.createGame);
   };
 
-  createGame = ({ difficulty }) => {
-    this.intro.destroy();
-    this.game = new Game(this.gameElement, { difficulty, onEnd: this.showEnd }, this.settings);
+  createGame = ({ difficulty }: { difficulty: string }) => {
+    this.intro?.destroy();
+    this.game = new Game(
+      this.gameElement,
+      { difficulty, onEnd: this.showEnd },
+      this.settings
+    );
   };
 
-  showEnd = ({ win }) => {
-    this.game.destroy();
-    this.end = new End(this.gameElement, { win, onRetry: this.createIntro }, this.settings);
+  showEnd = ({ win }: { win: boolean }) => {
+    this.game?.destroy();
+    this.end = new End(this.gameElement, { win, onRetry: this.createIntro });
   };
 
   destroy() {

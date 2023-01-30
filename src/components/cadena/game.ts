@@ -8,22 +8,32 @@ import errorSound from "../../sounds/error.mp3";
 import winSound from "../../sounds/victory.mp3";
 
 export class Game {
-  btns = [];
-  results = [];
-  timer = null;
-  #code = [];
-  static WIN_CLASS = "c-cadena__game--win";
-  static WIN_DELAY = 4000; // 4s before score in
-  static LOOSE_CLASS = "c-cadena__game--loose";
-  static LOOSE_DELAY = 1200; // 1.2s before score in
+  private btns: Btn[] = [];
+  private results: Result[] = [];
+  private timer!: Timer;
+  #code: string[] = [];
+
+  private readonly WIN_CLASS = "c-cadena__game--win";
+  private readonly WIN_DELAY = 4000; // 4s before score in
+  private readonly LOOSE_CLASS = "c-cadena__game--loose";
+  private readonly LOOSE_DELAY = 1200; // 1.2s before score in
+
+  private element: HTMLElement;
+  private onEnd: (data: { win: boolean }) => void;
+  private globalSettings: { muted?: boolean };
+  private codeValues: string[];
+  private nextValueToFind: string;
+  private correctAnswer: number;
 
   constructor(
-    element,
-    { difficulty = "medium", onEnd } = {},
+    element: HTMLElement,
+    {
+      difficulty = "medium",
+      onEnd
+    }: { difficulty?: string; onEnd: (data: { win: boolean }) => void },
     globalSettings = {}
   ) {
     this.element = element;
-    this.difficulty = difficulty;
     this.onEnd = onEnd;
     this.globalSettings = globalSettings;
 
@@ -51,24 +61,24 @@ export class Game {
 
   win() {
     this.timer.stop();
-    this.element.classList.add(this.constructor.WIN_CLASS);
+    this.element.classList.add(this.WIN_CLASS);
     if (this.globalSettings.muted !== true) {
       new Sound(winSound);
     }
     setTimeout(() => {
       this.onEnd({ win: true });
-    }, this.constructor.WIN_DELAY);
+    }, this.WIN_DELAY);
   }
 
   end() {
     this.timer.stop();
-    this.element.classList.add(this.constructor.LOOSE_CLASS);
+    this.element.classList.add(this.LOOSE_CLASS);
     if (this.globalSettings.muted !== true) {
-      new Sound(errorSound, {repeat: 3});
+      new Sound(errorSound, { repeat: 3 });
     }
     setTimeout(() => {
       this.onEnd({ win: false });
-    }, this.constructor.LOOSE_DELAY);
+    }, this.LOOSE_DELAY);
   }
 
   setCode() {
@@ -76,8 +86,8 @@ export class Game {
   }
 
   false() {
-    this.btns.forEach(btn => btn.unsetActive());
-    this.results.forEach(result => result.unsetActive());
+    this.btns.forEach((btn) => btn.unsetActive());
+    this.results.forEach((result) => result.unsetActive());
     this.nextValueToFind = "";
     this.correctAnswer = 0;
 
@@ -86,7 +96,7 @@ export class Game {
     }
   }
 
-  onClick(index) {
+  onClick(index: number) {
     if (
       this.nextValueToFind !== "" &&
       this.nextValueToFind !== this.codeValues[index]
@@ -102,7 +112,7 @@ export class Game {
     }
   }
 
-  valid(index) {
+  valid(index: number) {
     const resultIndex = this.#code.indexOf(this.codeValues[index]);
     this.btns[index].setActive();
     this.results[resultIndex].setActive();
@@ -120,7 +130,7 @@ export class Game {
     }
   }
 
-  createDom({ duration }) {
+  createDom({ duration }: { duration: number }) {
     this.element.innerHTML = `
       <div class="c-cadena__top">
         <div class="c-cadena__timer"></div>
@@ -131,27 +141,26 @@ export class Game {
       </div>
     `;
 
-    if (this.timer !== null) {
+    if (this.timer != null) {
       this.timer.destroy();
     }
-    this.timer = new Timer(this.element.querySelector(".c-cadena__timer"), {
+    this.timer = new Timer(this.element.querySelector(".c-cadena__timer")!, {
       duration,
       onEnd: () => this.end()
     });
-
-    if (Array.isArray(this.results)) {
-      this.results.forEach(result => result.destroy());
-    }
-    const resultElement = this.element.querySelector(".c-cadena__results");
+    this.results.forEach((result) => result.destroy());
+    const resultElement =
+      this.element.querySelector<HTMLElement>(".c-cadena__results")!;
     this.results = this.#code.map(() => new Result(resultElement));
 
     if (Array.isArray(this.btns)) {
-      this.btns.forEach(btn => btn.destroy());
+      this.btns.forEach((btn) => btn.destroy());
     }
-    const btnElement = this.element.querySelector(".c-cadena__btns");
+    const btnElement =
+      this.element.querySelector<HTMLElement>(".c-cadena__btns")!;
     this.btns = this.codeValues.map(
       (value, index) =>
-        new Btn(btnElement, value, active => {
+        new Btn(btnElement, value, (active) => {
           if (active === true) {
             return;
           }
@@ -162,11 +171,11 @@ export class Game {
 
   destroy() {
     this.timer.destroy();
-    this.results.forEach(result => result.destroy());
-    this.btns.forEach(btn => btn.destroy());
+    this.results.forEach((result) => result.destroy());
+    this.btns.forEach((btn) => btn.destroy());
 
-    this.element.classList.remove(this.constructor.WIN_CLASS);
-    this.element.classList.remove(this.constructor.LOOSE_CLASS);
+    this.element.classList.remove(this.WIN_CLASS);
+    this.element.classList.remove(this.LOOSE_CLASS);
 
     this.element.innerHTML = "";
   }

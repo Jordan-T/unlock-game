@@ -1,5 +1,12 @@
 export class Intro {
-  constructor(element, onSubmit) {
+  private element: HTMLElement;
+  private form: HTMLFormElement;
+  private onSubmit: (e: Event) => void;
+
+  constructor(
+    element: HTMLElement,
+    onSubmit: (data: { difficulty: string }) => void
+  ) {
     this.element = element;
     this.element.innerHTML = `
       <div class="c-intro">
@@ -21,10 +28,13 @@ export class Intro {
       </div>
     `;
 
-    this.onSubmit = e => {
+    this.onSubmit = (e) => {
       e.preventDefault();
 
-      onSubmit({ difficulty: this.element.querySelector("#difficulty").value });
+      onSubmit({
+        difficulty:
+          this.element.querySelector<HTMLSelectElement>("#difficulty")!.value
+      });
     };
 
     this.form = this.element.getElementsByTagName("form")[0];

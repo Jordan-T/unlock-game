@@ -5,7 +5,7 @@ export class Result extends BaseActiveElement {
   static BASE_CLASS = "c-cadena__result";
   static ACTIVE_CLASS = "c-cadena__result--active";
 
-  constructor(wrapper) {
+  constructor(wrapper: HTMLElement) {
     super(wrapper);
 
     this.element.innerHTML = "<span></span>";

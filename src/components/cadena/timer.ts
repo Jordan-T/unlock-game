@@ -1,14 +1,24 @@
 export class Timer {
-  static BASE_CLASS = "c-cadena__timer";
-  #timer = null;
+  private element: HTMLElement;
+  private endDate!: number;
+  private onEnd: () => void;
 
-  constructor(element, { duration, endDate, onEnd }) {
+  #timer?: number = undefined;
+
+  constructor(
+    element: HTMLElement,
+    {
+      duration,
+      endDate,
+      onEnd
+    }: { duration?: number; endDate?: number | string; onEnd: () => void }
+  ) {
     this.element = element;
     this.onEnd = onEnd;
 
     if (endDate === undefined && duration !== undefined) {
       this.setEnd(new Date().getTime() + duration * 1000);
-    } else {
+    } else if (endDate !== undefined) {
       this.setEnd(endDate);
     }
 
@@ -17,7 +27,7 @@ export class Timer {
 
   update = () => {
     requestAnimationFrame(() => {
-      const secondsLeft = (this.endDate - Date.parse(new Date())) / 1000;
+      const secondsLeft = (this.endDate - Date.now()) / 1000;
 
       if (secondsLeft <= 0) {
         this.element.innerHTML = "0";
@@ -28,13 +38,13 @@ export class Timer {
 
       const seconds = Math.floor(secondsLeft);
 
-      this.element.innerHTML = seconds;
+      this.element.innerHTML = `${seconds}`;
 
       this.#timer = setTimeout(this.update, 1000);
     });
   };
 
-  setEnd(endDate) {
+  setEnd(endDate: number | string) {
     this.endDate = typeof endDate === "number" ? endDate : Date.parse(endDate);
   }
 
@@ -47,7 +57,7 @@ export class Timer {
   }
 
   destroy() {
-    this.innerHTML = "";
+    this.element.innerHTML = "";
     this.stop();
   }
 }

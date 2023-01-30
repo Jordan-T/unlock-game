@@ -1,5 +1,16 @@
 export class Sound {
-  constructor(sound, { volume, repeat, onEnd } = {}) {
+  private readonly sound: HTMLAudioElement;
+  private repeat: number | boolean;
+  private onEnd?: () => void;
+
+  constructor(
+    sound: string,
+    {
+      volume,
+      repeat,
+      onEnd
+    }: { volume?: number; repeat?: number | boolean; onEnd?: () => void } = {}
+  ) {
     this.sound = document.createElement("audio");
     if (volume) {
       this.volume(volume);
@@ -9,7 +20,7 @@ export class Sound {
     this.sound.setAttribute("controls", "none");
     this.sound.style.display = "none";
     document.body.appendChild(this.sound);
-    this.repeat = repeat;
+    this.repeat = repeat ?? false;
 
     // add auto destroy
     this.onEnd = onEnd;
@@ -22,8 +33,7 @@ export class Sound {
     if (this.repeat === true || this.repeat > 1) {
       this.sound.currentTime = 0;
       this.play();
-      if (this.repeat !== true) {
-        console.log(this.sound.duration);
+      if (typeof this.repeat === "number") {
         this.repeat -= 1;
       }
       return;
@@ -42,7 +52,7 @@ export class Sound {
   play() {
     const result = this.sound.play();
     if (result !== undefined) {
-      result.catch(error => {
+      result.catch((_) => {
         const onClick = () => {
           this.play();
           document.body.removeEventListener("click", onClick, true);
@@ -56,7 +66,7 @@ export class Sound {
     this.sound.pause();
   }
 
-  volume(value) {
+  volume(value: number) {
     this.sound.volume = value;
   }
 
