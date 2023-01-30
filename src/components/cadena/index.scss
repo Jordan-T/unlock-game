@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $lightColor--base: #111;
 $lightColor--base2: #333;
 $lightColor--active: #FFF;
@@ -219,10 +221,10 @@ $lightColor--error: #C44;
 
     // create the rotation (min 5 element, max 20)
     @each $length in 4, 6, 8, 10, 12 {
-      $baseRotationStep: 360deg / $length;
+      $baseRotationStep: math.div(360deg, $length);
 
       @for $i from 1 through $length {
-        $rotationStep: 360deg / $length * ($i - 1);
+        $rotationStep: math.div(360deg, $length) * ($i - 1);
 
         &:nth-child(#{$i}):nth-last-child(#{$length - $i + 1}) {
           transform: translateY(-50%) rotate((($rotationStep * -1) - 90deg));
@@ -232,13 +234,13 @@ $lightColor--error: #C44;
           }
 
           span {
-            transform: rotate(($baseRotationStep / 2));
+            transform: rotate(($baseRotationStep * 0.5));
 
           }
 
           .c-cadena__results--reverse & {
             span {
-              transform: rotate(($baseRotationStep / -2));
+              transform: rotate(math.div($baseRotationStep, -2));
             }
           }
         }
