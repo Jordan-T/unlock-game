@@ -1,9 +1,16 @@
 export class End {
-  constructor(wrapper, { win, onRetry }) {
+  private readonly element: HTMLElement;
+  private readonly button: HTMLElement;
+  private readonly onClick: (e: Event) => void;
+
+  constructor(
+    wrapper: HTMLElement,
+    { win, onRetry }: { win: boolean; onRetry: () => void }
+  ) {
     this.element = document.createElement("div");
     this.element.classList.add("c-end");
     this.element.innerHTML = `<h1>You ${win ? "win" : "loose"}</h1>`;
-    this.onClick = e => {
+    this.onClick = (e) => {
       e.preventDefault();
       onRetry();
     };

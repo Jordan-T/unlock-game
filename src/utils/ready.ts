@@ -1,4 +1,4 @@
-export default fn => {
+export default (fn: () => void) => {
   if (document.readyState !== "loading") {
     fn();
   } else {

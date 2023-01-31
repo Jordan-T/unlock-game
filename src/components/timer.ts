@@ -1,9 +1,22 @@
 export class Timer {
-  constructor({ element, endDate, onEnd }) {
+  private element: HTMLElement;
+  private minutesElement!: HTMLElement;
+  private secondsElement!: HTMLElement;
+  private endDate!: number;
+  private timer?: number;
+  private onEnd: () => void;
+
+  constructor({
+    element,
+    endDate,
+    onEnd
+  }: {
+    element: HTMLElement;
+    endDate: number | string;
+    onEnd: () => void;
+  }) {
     this.element = element;
     this.onEnd = onEnd;
-
-    this.timer = null;
 
     this.setEnd(endDate);
     this.createDom();
@@ -24,8 +37,8 @@ export class Timer {
 
   update = () => {
     requestAnimationFrame(() => {
-      const timeLeft = (this.endDate - Date.parse(new Date())) / 1000;
-      const get2Digits = number => `${number < 10 ? 0 : ""}${number}`;
+      const timeLeft = (this.endDate - Date.now()) / 1000;
+      const get2Digits = (number: number) => `${number < 10 ? 0 : ""}${number}`;
 
       if (timeLeft <= 0) {
         this.minutesElement.innerHTML = get2Digits(0);
@@ -45,7 +58,7 @@ export class Timer {
     });
   };
 
-  setEnd(endDate) {
+  setEnd(endDate: number | string) {
     this.endDate = typeof endDate === "number" ? endDate : Date.parse(endDate);
   }
 

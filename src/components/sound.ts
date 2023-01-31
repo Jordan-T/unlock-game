@@ -1,5 +1,17 @@
 export class Sound {
-  constructor(sound, { volume, repeat, onEnd } = {}) {
+  private readonly sound: HTMLAudioElement;
+  private repeat: number | boolean;
+  private paused = false;
+  private onEnd?: () => void;
+
+  constructor(
+    sound: string,
+    {
+      volume,
+      repeat,
+      onEnd
+    }: { volume?: number; repeat?: number | boolean; onEnd?: () => void } = {}
+  ) {
     this.sound = document.createElement("audio");
     if (volume) {
       this.volume(volume);
@@ -9,7 +21,7 @@ export class Sound {
     this.sound.setAttribute("controls", "none");
     this.sound.style.display = "none";
     document.body.appendChild(this.sound);
-    this.repeat = repeat;
+    this.repeat = repeat ?? false;
 
     // add auto destroy
     this.onEnd = onEnd;
@@ -22,8 +34,7 @@ export class Sound {
     if (this.repeat === true || this.repeat > 1) {
       this.sound.currentTime = 0;
       this.play();
-      if (this.repeat !== true) {
-        console.log(this.sound.duration);
+      if (typeof this.repeat === "number") {
         this.repeat -= 1;
       }
       return;
@@ -40,10 +51,12 @@ export class Sound {
    * In particular, on the first arrival on the page
    */
   play() {
+    this.paused = false;
     const result = this.sound.play();
     if (result !== undefined) {
-      result.catch(error => {
+      result.catch((_) => {
         const onClick = () => {
+          if (this.paused) return;
           this.play();
           document.body.removeEventListener("click", onClick, true);
         };
@@ -54,14 +67,16 @@ export class Sound {
 
   pause() {
     this.sound.pause();
+    this.paused = true;
   }
 
-  volume(value) {
+  volume(value: number) {
     this.sound.volume = value;
   }
 
   destroy() {
     this.pause();
+    this.paused = true;
     this.sound.remove();
   }
 }
