@@ -1,6 +1,8 @@
 import { BaseElement } from "./baseElement";
 
-export class BaseActiveElement extends BaseElement {
+export class BaseActiveElement<
+  T extends HTMLElement = HTMLElement
+> extends BaseElement<T> {
   protected active = false;
   static ACTIVE_CLASS: string = "c-cadena__result--active";
 

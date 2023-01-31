@@ -2,20 +2,27 @@
 
 $lightColor--base: #111;
 $lightColor--base2: #333;
-$lightColor--active: #FFF;
-$lightColor--active2: #F90;
-// test
-$lightColor--active: #CFC;
-$lightColor--active2: #4C4;
+$lightColor--active: #cfc;
+$lightColor--active2: #4c4;
+$lightColor--outline: hsl(120, 57%, 30%);
 
-$lightColor--error: #C44;
+$lightColor--error: #c44;
 
 .c-cadena {
+  display: grid;
+  height: 100%;
+  padding: 2rem;
+
+  select {
+    font: inherit;
+    padding: 0.5rem;
+  }
+
   &__game {
     @media (max-height: 35rem) {
       display: flex;
       align-items: center;
-      justify-content: center
+      justify-content: center;
     }
   }
 
@@ -32,18 +39,17 @@ $lightColor--error: #C44;
     display: inline-block;
     cursor: pointer;
     margin: 0 0 1rem;
-    padding: .5rem 1rem;
+    padding: 0.5rem 1rem;
     font-family: inherit;
     border-radius: 5rem;
     background: #444;
-    color: #FFF;
+    color: #fff;
     border: 0;
     letter-spacing: inherit;
-    box-shadow:
-      inset 0 .2rem .2rem rgba(255, 255, 255, .1),
-      inset 0 -.2rem .2rem rgba(0, 0, 0, .2),
-      0 .5rem .5rem rgba(0, 0, 0, .3);
-    transition: .1s ease-out;
+    box-shadow: inset 0 0.2rem 0.2rem rgba(255, 255, 255, 0.1),
+      inset 0 -0.2rem 0.2rem rgba(0, 0, 0, 0.2),
+      0 0.5rem 0.5rem rgba(0, 0, 0, 0.3);
+    transition: 0.1s ease-out;
     outline: none;
 
     &:hover,
@@ -62,12 +68,12 @@ $lightColor--error: #C44;
 
     &--mute {
       &::before {
-        content: '';
+        content: "";
         display: inline-block;
         width: 1.8em;
         height: 1.8em;
         vertical-align: middle;
-        margin: -.9em .5em -.9em 0;
+        margin: -0.9em 0.5em -0.9em 0;
         background: url(../../img/volume_up.svg);
         background-size: contain;
       }
@@ -78,7 +84,6 @@ $lightColor--error: #C44;
       }
     }
   }
-
 
   &__top {
     position: relative;
@@ -92,10 +97,9 @@ $lightColor--error: #C44;
     padding: 1rem 2rem;
     background: #222;
     border-radius: 1rem;
-    box-shadow:
-    inset 0 .2rem .2rem rgba(255, 255, 255, .1),
-    inset 0 -.2rem .2rem rgba(0, 0, 0, .2),
-    0 .5rem .5rem rgba(0, 0, 0, .3);
+    box-shadow: inset 0 0.2rem 0.2rem rgba(255, 255, 255, 0.1),
+      inset 0 -0.2rem 0.2rem rgba(0, 0, 0, 0.2),
+      0 0.5rem 0.5rem rgba(0, 0, 0, 0.3);
   }
 
   &__timer {
@@ -113,16 +117,15 @@ $lightColor--error: #C44;
     width: 12rem;
     height: 12rem;
     background: #111;
-    margin: .5rem auto;
+    margin: 0.5rem auto;
     border-radius: 50%;
-    box-shadow:
-    inset 0 -.2rem .2rem rgba(255, 255, 255, .03),
-    inset 0 .2rem .2rem rgba(0, 0, 0, .2),
-    0 -.2rem .2rem rgba(0, 0, 0, .2);
+    box-shadow: inset 0 -0.2rem 0.2rem rgba(255, 255, 255, 0.03),
+      inset 0 0.2rem 0.2rem rgba(0, 0, 0, 0.2),
+      0 -0.2rem 0.2rem rgba(0, 0, 0, 0.2);
 
     // inner
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 50%;
       left: 50%;
@@ -131,23 +134,22 @@ $lightColor--error: #C44;
       border-radius: 50%;
       transform: translate(-50%, -50%);
       background: #222;
-      box-shadow:
-      inset 0 .2rem .2rem rgba(255, 255, 255, .1),
-      inset 0 -.2rem .2rem rgba(0, 0, 0, .2),
-      0 .2rem .4rem rgba(0, 0, 0, .5);
+      box-shadow: inset 0 0.2rem 0.2rem rgba(255, 255, 255, 0.1),
+        inset 0 -0.2rem 0.2rem rgba(0, 0, 0, 0.2),
+        0 0.2rem 0.4rem rgba(0, 0, 0, 0.5);
     }
 
     &--reverse {
       .c-cadena__result {
         span {
-          border-top-width: .45rem;
+          border-top-width: 0.45rem;
           border-bottom-width: 0;
-          margin: -.4rem 0;
+          margin: -0.4rem 0;
 
           &::before {
             top: auto;
             bottom: 100%;
-            margin: 0 -.4rem .6rem;
+            margin: 0 -0.4rem 0.6rem;
           }
         }
       }
@@ -156,7 +158,8 @@ $lightColor--error: #C44;
 
   &__result {
     position: absolute;
-    top: 50%; left: 50%;
+    top: 50%;
+    left: 50%;
     width: 50%;
     text-align: right;
     transform-origin: 0 50%;
@@ -168,45 +171,39 @@ $lightColor--error: #C44;
       bottom: 50%;
       width: 0;
       height: 0;
-      margin: -.1rem 0;
-      border: solid .45rem transparent;
+      margin: -0.1rem 0;
+      border: solid 0.45rem transparent;
       border-bottom-color: #880;
       border-top-color: #880;
       border-top-width: 0;
       transform-origin: -4.2rem 50%;
 
       &::before {
-        content: '';
+        content: "";
         position: absolute;
         top: 100%;
         left: 0;
-        width: .85rem;
-        height: .15rem;
-        margin: .6rem -.4rem 0;
+        width: 0.85rem;
+        height: 0.15rem;
+        margin: 0.6rem -0.4rem 0;
         background: #880;
       }
     }
 
     &::after {
-      content: '';
+      content: "";
       width: 1.25rem;
       height: 1.25rem;
       display: inline-flex;
       background: $lightColor--base;
       border-radius: 50%;
-      margin: 0 .75rem;
-      box-shadow:
-      inset 0 .2rem .75rem rgba(255, 255, 255, .3),
-      inset 0 -.2rem .2rem rgba(0, 0, 0, .5),
-      0 0 0 $lightColor--active,
-      0 0 0 $lightColor--active,
-      0 0 0 $lightColor--active,
-      0 0 0 $lightColor--active2,
-      0 0 0 $lightColor--active2,
-      0 0 0 $lightColor--active2,
-      0 0 0 $lightColor--active2,
-      0 0 0 $lightColor--active2,
-      0 .2rem .4rem rgba(0, 0, 0, .5);
+      margin: 0 0.75rem;
+      box-shadow: inset 0 0.2rem 0.75rem rgba(255, 255, 255, 0.3),
+        inset 0 -0.2rem 0.2rem rgba(0, 0, 0, 0.5), 0 0 0 $lightColor--active,
+        0 0 0 $lightColor--active, 0 0 0 $lightColor--active,
+        0 0 0 $lightColor--active2, 0 0 0 $lightColor--active2,
+        0 0 0 $lightColor--active2, 0 0 0 $lightColor--active2,
+        0 0 0 $lightColor--active2, 0 0.2rem 0.4rem rgba(0, 0, 0, 0.5);
       transition: all 300ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
     }
 
@@ -235,7 +232,6 @@ $lightColor--error: #C44;
 
           span {
             transform: rotate(($baseRotationStep * 0.5));
-
           }
 
           .c-cadena__results--reverse & {
@@ -261,20 +257,20 @@ $lightColor--error: #C44;
     justify-self: center;
     outline: none;
     cursor: pointer;
-    margin: .5rem;
+    margin: 0.5rem;
     width: 2rem;
     height: 2rem;
     background: #111;
     border: 0;
-    box-shadow:
-    inset 0 -.2rem rgba(255, 255, 255, .1),
-    inset 0 .2rem rgba(0, 0, 0, .2);
+    box-shadow: inset 0 -0.2rem rgba(255, 255, 255, 0.1),
+      inset 0 0.2rem rgba(0, 0, 0, 0.2);
     -webkit-tap-highlight-color: transparent;
 
     &::before {
       content: attr(data-value);
       position: absolute;
-      top: 50%; left: 100%;
+      top: 50%;
+      left: 100%;
       margin: 0 0rem;
       padding: 1rem;
       transform: translateY(-50%);
@@ -285,7 +281,7 @@ $lightColor--error: #C44;
     }
 
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       top: 50%;
       left: 50%;
@@ -294,10 +290,9 @@ $lightColor--error: #C44;
       border-radius: 50%;
       transform: translate(-50%, -50%);
       background: #333;
-      box-shadow:
-      inset 0 .2rem .3rem rgba(255, 255, 255, .2),
-      inset 0 -.2rem .3rem rgba(0, 0, 0, .5);
-      transition: .1s ease-out;
+      box-shadow: inset 0 0.2rem 0.3rem rgba(255, 255, 255, 0.2),
+        inset 0 -0.2rem 0.3rem rgba(0, 0, 0, 0.5);
+      transition: 0.1s ease-out;
     }
 
     &:nth-child(2n + 1)::before {
@@ -312,13 +307,18 @@ $lightColor--error: #C44;
       }
     }
 
+    &:focus-visible {
+      outline: $lightColor--outline solid 0.2rem;
+      outline-offset: -0.2rem;
+    }
+
     &--active {
       &,
       &:hover,
       &:focus {
         &::after {
           background: #333;
-          opacity: .4;
+          opacity: 0.4;
         }
       }
     }
@@ -326,30 +326,30 @@ $lightColor--error: #C44;
 
   &__game {
     &--loose {
-      animation: fadeOut .3s ease-out .9s;
+      animation: fadeOut 0.3s ease-out 0.9s;
       animation-fill-mode: both;
 
       .c-cadena {
         &__result {
           &::after {
-            animation: unlock-loose .3s 3;
+            animation: unlock-loose 0.3s 3;
           }
         }
       }
     }
 
     &--win {
-      animation: fadeOut .3s ease-out 3.5s;
+      animation: fadeOut 0.3s ease-out 3.5s;
       animation-fill-mode: both;
 
       .c-cadena {
         &__result {
           &::after {
-            animation: unlock-win .6s 4 .3s;
+            animation: unlock-win 0.6s 4 0.3s;
             animation-fill-mode: forwards;
           }
           &:nth-child(odd)::after {
-            animation-delay: .6s;
+            animation-delay: 0.6s;
           }
         }
       }
@@ -357,84 +357,66 @@ $lightColor--error: #C44;
   }
 }
 
-
 @keyframes light {
   from {
-    box-shadow:
-    inset 0 .2rem .75rem rgba(255, 255, 255, .3),
-    inset 0 -.2rem .1rem rgba(0, 0, 0, .1),
-    0 0 10px $lightColor--active,
-    0 0 20px $lightColor--active,
-    0 0 30px $lightColor--active,
-    0 0 40px $lightColor--active2,
-    0 0 70px $lightColor--active2,
-    0 0 80px $lightColor--active2,
-    0 0 100px $lightColor--active2,
-    0 0 150px $lightColor--active2,
-    0 .2rem .4rem rgba(0, 0, 0, .5);
+    box-shadow: inset 0 0.2rem 0.75rem rgba(255, 255, 255, 0.3),
+      inset 0 -0.2rem 0.1rem rgba(0, 0, 0, 0.1), 0 0 10px $lightColor--active,
+      0 0 20px $lightColor--active, 0 0 30px $lightColor--active,
+      0 0 40px $lightColor--active2, 0 0 70px $lightColor--active2,
+      0 0 80px $lightColor--active2, 0 0 100px $lightColor--active2,
+      0 0 150px $lightColor--active2, 0 0.2rem 0.4rem rgba(0, 0, 0, 0.5);
   }
   to {
-    box-shadow:
-    inset 0 .2rem .75rem rgba(255, 255, 255, .3),
-    inset 0 -.2rem .1rem rgba(0, 0, 0, .1),
-    0 0 5px $lightColor--active,
-    0 0 10px $lightColor--active,
-    0 0 15px $lightColor--active,
-    0 0 20px $lightColor--active2,
-    0 0 35px $lightColor--active2,
-    0 0 40px $lightColor--active2,
-    0 0 50px $lightColor--active2,
-    0 0 75px $lightColor--active2,
-    0 .2rem .4rem rgba(0, 0, 0, .5);
+    box-shadow: inset 0 0.2rem 0.75rem rgba(255, 255, 255, 0.3),
+      inset 0 -0.2rem 0.1rem rgba(0, 0, 0, 0.1), 0 0 5px $lightColor--active,
+      0 0 10px $lightColor--active, 0 0 15px $lightColor--active,
+      0 0 20px $lightColor--active2, 0 0 35px $lightColor--active2,
+      0 0 40px $lightColor--active2, 0 0 50px $lightColor--active2,
+      0 0 75px $lightColor--active2, 0 0.2rem 0.4rem rgba(0, 0, 0, 0.5);
   }
 }
 
 @keyframes unlock-win {
-  0%, 49% {
+  0%,
+  49% {
     background: $lightColor--base;
     animation: none;
-    box-shadow:
-      inset 0 .2rem .75rem rgba(255, 255, 255, .3),
-      inset 0 -.2rem .1rem rgba(0, 0, 0, .1),
-      0 0 0 $lightColor--active,
-      0 0 0 $lightColor--active,
-      0 0 0 $lightColor--active,
-      0 0 0 $lightColor--active2,
-      0 0 0 $lightColor--active2,
-      0 0 0 $lightColor--active2,
-      0 0 0 $lightColor--active2,
-      0 0 0 $lightColor--active2,
-      0 .2rem .4rem rgba(0, 0, 0, .5);
+    box-shadow: inset 0 0.2rem 0.75rem rgba(255, 255, 255, 0.3),
+      inset 0 -0.2rem 0.1rem rgba(0, 0, 0, 0.1), 0 0 0 $lightColor--active,
+      0 0 0 $lightColor--active, 0 0 0 $lightColor--active,
+      0 0 0 $lightColor--active2, 0 0 0 $lightColor--active2,
+      0 0 0 $lightColor--active2, 0 0 0 $lightColor--active2,
+      0 0 0 $lightColor--active2, 0 0.2rem 0.4rem rgba(0, 0, 0, 0.5);
   }
-  50%, 100% {
+  50%,
+  100% {
     background: $lightColor--active;
     //border: 1px solid $lightColor--active;
   }
-  65%, 100% {
+  65%,
+  100% {
     background: $lightColor--active;
     animation: none;
     //transition-duration: 150ms;
-    box-shadow:
-      inset 0 .2rem .75rem rgba(255, 255, 255, .3),
-      inset 0 -.2rem .1rem rgba(0, 0, 0, .1),
-      0 0 0 $lightColor--active,
-      0 0 20px $lightColor--active,
-      0 0 30px $lightColor--active,
-      0 0 40px $lightColor--active2,
-      0 0 70px $lightColor--active2,
-      0 0 80px $lightColor--active2,
-      0 0 100px $lightColor--active2,
-      0 0 150px $lightColor--active2,
-      0 .2rem .4rem rgba(0, 0, 0, .5);
+    box-shadow: inset 0 0.2rem 0.75rem rgba(255, 255, 255, 0.3),
+      inset 0 -0.2rem 0.1rem rgba(0, 0, 0, 0.1), 0 0 0 $lightColor--active,
+      0 0 20px $lightColor--active, 0 0 30px $lightColor--active,
+      0 0 40px $lightColor--active2, 0 0 70px $lightColor--active2,
+      0 0 80px $lightColor--active2, 0 0 100px $lightColor--active2,
+      0 0 150px $lightColor--active2, 0 0.2rem 0.4rem rgba(0, 0, 0, 0.5);
   }
 }
 
-
 @keyframes unlock-loose {
-  0% { }
-  50% { background-color: $lightColor--error; }
+  0% {
+  }
+  50% {
+    background-color: $lightColor--error;
+  }
 }
 
 @keyframes fadeOut {
-  to { opacity: 0 }
+  to {
+    opacity: 0;
+  }
 }

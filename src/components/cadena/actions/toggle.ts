@@ -34,7 +34,7 @@ export class Toggle {
     wrapper.append(this.element);
   }
 
-  onClick = (e: Event) => {
+  private onClick = (e: Event) => {
     e.preventDefault();
     const needActive = this.active === false;
     if (needActive === true) {
@@ -42,9 +42,19 @@ export class Toggle {
     } else {
       this.onUnactive();
     }
-    this.element.classList.toggle(this.ACTIVE_CLASS);
+    this.element.classList.toggle(this.ACTIVE_CLASS, needActive);
     this.active = needActive;
   };
+
+  setActive() {
+    this.active = true;
+    this.element.classList.add(this.ACTIVE_CLASS);
+  }
+
+  unsetActive() {
+    this.active = false;
+    this.element.classList.remove(this.ACTIVE_CLASS);
+  }
 
   destroy() {
     this.element.removeEventListener("click", this.onClick, true);

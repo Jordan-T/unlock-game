@@ -6,11 +6,16 @@ import { Sound } from "../sound";
 import beepSound from "../../sounds/beep.mp3";
 import errorSound from "../../sounds/error.mp3";
 import winSound from "../../sounds/victory.mp3";
+import { difficulties, Difficulty } from "./config";
+import BackBtn from "./actions/backBtn";
+
+type OnEnd = (data: { win: boolean | null }) => void;
 
 export class Game {
   private btns: Btn[] = [];
   private results: Result[] = [];
   private timer!: Timer;
+  private backBtn!: BackBtn;
   #code: string[] = [];
 
   private readonly WIN_CLASS = "c-cadena__game--win";
@@ -19,7 +24,7 @@ export class Game {
   private readonly LOOSE_DELAY = 1200; // 1.2s before score in
 
   private element: HTMLElement;
-  private onEnd: (data: { win: boolean }) => void;
+  private onEnd: OnEnd;
   private globalSettings: { muted?: boolean };
   private codeValues: string[];
   private nextValueToFind: string;
@@ -27,36 +32,20 @@ export class Game {
 
   constructor(
     element: HTMLElement,
-    {
-      difficulty = "medium",
-      onEnd
-    }: { difficulty?: string; onEnd: (data: { win: boolean }) => void },
+    { difficulty = "medium", onEnd }: { difficulty?: Difficulty; onEnd: OnEnd },
     globalSettings = {}
   ) {
     this.element = element;
     this.onEnd = onEnd;
     this.globalSettings = globalSettings;
 
-    let duration = 120;
-    if (difficulty === "very-easy") {
-      duration = 300;
-      this.codeValues = [..."1234"];
-    } else if (difficulty === "easy") {
-      duration = 180;
-      this.codeValues = [..."123456"];
-    } else if (difficulty === "hard") {
-      duration = 60;
-      this.codeValues = [..."ABCDEFGHIJ"];
-    } else if (difficulty === "very-hard") {
-      duration = 40;
-      this.codeValues = [..."ABCDEFGHIJKL"];
-    } else {
-      this.codeValues = [..."12345678"];
-    }
+    const difficultySettings = difficulties[difficulty];
+    this.codeValues = [...difficultySettings.codeValues];
     this.nextValueToFind = "";
     this.correctAnswer = 0;
     this.setCode();
-    this.createDom({ duration });
+    this.createDom({ duration: difficultySettings.duration });
+    this.element.querySelector("button")?.focus();
   }
 
   win() {
@@ -79,6 +68,11 @@ export class Game {
     setTimeout(() => {
       this.onEnd({ win: false });
     }, this.LOOSE_DELAY);
+  }
+
+  stop() {
+    this.timer.stop();
+    this.onEnd({ win: null });
   }
 
   setCode() {
@@ -139,6 +133,7 @@ export class Game {
       <div class="c-cadena__bottom">
         <div class="c-cadena__btns"></div>
       </div>
+      <div class="c-cadena__back"></div>
     `;
 
     if (this.timer != null) {
@@ -148,6 +143,15 @@ export class Game {
       duration,
       onEnd: () => this.end()
     });
+
+    const backElement =
+      this.element.querySelector<HTMLElement>(".c-cadena__back")!;
+    this.backBtn = new BackBtn(backElement, () => {
+      if (confirm("Leave current game?")) {
+        this.stop();
+      }
+    });
+
     this.results.forEach((result) => result.destroy());
     const resultElement =
       this.element.querySelector<HTMLElement>(".c-cadena__results")!;
@@ -170,7 +174,8 @@ export class Game {
   }
 
   destroy() {
-    this.timer.destroy();
+    this.timer?.destroy();
+    this.backBtn?.destroy();
     this.results.forEach((result) => result.destroy());
     this.btns.forEach((btn) => btn.destroy());
 

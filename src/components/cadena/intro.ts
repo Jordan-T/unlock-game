@@ -1,3 +1,6 @@
+import { GameSettings } from ".";
+import { difficulties, Difficulty } from "./config";
+
 export class Intro {
   private element: HTMLElement;
   private form: HTMLFormElement;
@@ -5,7 +8,8 @@ export class Intro {
 
   constructor(
     element: HTMLElement,
-    onSubmit: (data: { difficulty: string }) => void
+    onSubmit: (data: { difficulty: Difficulty }) => void,
+    globalSettings: GameSettings
   ) {
     this.element = element;
     this.element.innerHTML = `
@@ -13,12 +17,15 @@ export class Intro {
         <h1>Unlock me</h1>
         <form class="c-intro__form">
           <label for="difficulty">Select the difficulty</label>
-          <select id="difficulty">
-            <option value="very-easy">Very easy</option>
-            <option value="easy">Easy</option>
-            <option value="medium" selected>Medium</option>
-            <option value="hard">Hard</option>
-            <option value="very-hard">Very hard</option>
+          <select id="difficulty" autofocus>
+            ${Object.entries(difficulties)
+              .map(
+                ([key, { text }]) =>
+                  `<option value="${key}"${
+                    globalSettings.currentDifficulty === key ? " selected" : ""
+                  }>${text}</option>`
+              )
+              .join("")})}
           </select>
 
           <div>
@@ -32,8 +39,9 @@ export class Intro {
       e.preventDefault();
 
       onSubmit({
-        difficulty:
-          this.element.querySelector<HTMLSelectElement>("#difficulty")!.value
+        difficulty: this.element.querySelector<HTMLSelectElement>(
+          "#difficulty"
+        )!.value as Difficulty
       });
     };
 

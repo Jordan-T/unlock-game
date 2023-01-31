@@ -5,6 +5,12 @@ import { Toggle } from "./actions/toggle";
 import { Sound } from "../sound";
 import ambianceSound from "../../sounds/ambiance.mp3";
 import "./index.scss";
+import { Difficulty, defaultDifficulty } from "./config";
+
+export type GameSettings = {
+  muted: boolean;
+  currentDifficulty: Difficulty;
+};
 
 export class Cadena {
   private element: HTMLElement;
@@ -16,8 +22,10 @@ export class Cadena {
   private intro?: Intro;
   private ambiance: Sound;
 
-  private settings = {
-    muted: false
+  private settings: GameSettings = {
+    muted: false,
+    currentDifficulty: defaultDifficulty,
+    ...JSON.parse(localStorage.getItem("cadena-settings") || "{}")
   };
 
   constructor(element: HTMLElement) {
@@ -39,27 +47,37 @@ export class Cadena {
     this.createIntro();
 
     this.ambiance = new Sound(ambianceSound, { volume: 0.5, repeat: true });
+    this.settings.muted ? this.mute() : this.unmute();
   }
 
   mute = () => {
     this.settings.muted = true;
     this.ambiance.pause();
+    this.saveSettings();
+    this.muteAction.setActive();
   };
   unmute = () => {
     this.settings.muted = false;
     this.ambiance.play();
+    this.saveSettings();
+    this.muteAction.unsetActive();
   };
+  saveSettings() {
+    localStorage.setItem("cadena-settings", JSON.stringify(this.settings));
+  }
 
   createIntro = () => {
     if (this.end !== undefined) {
       this.end.destroy();
       this.end = undefined;
     }
-    this.intro = new Intro(this.gameElement, this.createGame);
+    this.intro = new Intro(this.gameElement, this.createGame, this.settings);
   };
 
-  createGame = ({ difficulty }: { difficulty: string }) => {
+  createGame = ({ difficulty }: { difficulty: Difficulty }) => {
     this.intro?.destroy();
+    this.settings.currentDifficulty = difficulty;
+    this.saveSettings();
     this.game = new Game(
       this.gameElement,
       { difficulty, onEnd: this.showEnd },
@@ -67,8 +85,12 @@ export class Cadena {
     );
   };
 
-  showEnd = ({ win }: { win: boolean }) => {
+  showEnd = ({ win }: { win: boolean | null }) => {
     this.game?.destroy();
+    if (win == null) {
+      this.createIntro();
+      return;
+    }
     this.end = new End(this.gameElement, { win, onRetry: this.createIntro });
   };
 

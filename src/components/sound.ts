@@ -1,6 +1,7 @@
 export class Sound {
   private readonly sound: HTMLAudioElement;
   private repeat: number | boolean;
+  private paused = false;
   private onEnd?: () => void;
 
   constructor(
@@ -50,10 +51,12 @@ export class Sound {
    * In particular, on the first arrival on the page
    */
   play() {
+    this.paused = false;
     const result = this.sound.play();
     if (result !== undefined) {
       result.catch((_) => {
         const onClick = () => {
+          if (this.paused) return;
           this.play();
           document.body.removeEventListener("click", onClick, true);
         };
@@ -64,6 +67,7 @@ export class Sound {
 
   pause() {
     this.sound.pause();
+    this.paused = true;
   }
 
   volume(value: number) {
@@ -72,6 +76,7 @@ export class Sound {
 
   destroy() {
     this.pause();
+    this.paused = true;
     this.sound.remove();
   }
 }

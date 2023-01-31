@@ -1,6 +1,6 @@
 import { BaseActiveElement } from "../../utils/baseActiveElement";
 
-export class Btn extends BaseActiveElement {
+export class Btn extends BaseActiveElement<HTMLButtonElement> {
   static TAG_NAME = "button";
   static BASE_CLASS = "c-cadena__btn";
   static ACTIVE_CLASS = "c-cadena__btn--active";
@@ -13,6 +13,7 @@ export class Btn extends BaseActiveElement {
   ) {
     super(wrapper);
 
+    this.element.type = "button";
     this.element.dataset.value = value;
 
     this.onClick = (e) => {
@@ -20,6 +21,16 @@ export class Btn extends BaseActiveElement {
       onClick(this.active);
     };
     this.element.addEventListener("click", this.onClick, true);
+  }
+
+  setActive(): void {
+    super.setActive();
+    this.element.disabled = true;
+  }
+
+  unsetActive(): void {
+    super.unsetActive();
+    this.element.disabled = false;
   }
 
   destroy() {
